@@ -24,7 +24,7 @@ app.set('views', path.join(process.cwd(), 'views'));
 
 // Routes
 app.get('/', (req, res) => {
-  res.render('index', { title: 'InariBox' });
+  res.render('index', { title: 'InariBox.io' });
 });
 
 // Start the Server
