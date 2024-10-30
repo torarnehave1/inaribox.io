@@ -83,7 +83,7 @@ router.get('/search-emails-bydate', async (req, res) => {
   });
   
 
-router.get('/search-emails', async (req, res) => {
+  router.get('/search-emails', async (req, res) => {
     const searchTerm = req.query.term;
     const limit = parseInt(req.query.limit) || 10;
     const offset = parseInt(req.query.offset) || 0;
@@ -111,7 +111,7 @@ router.get('/search-emails', async (req, res) => {
       let lock = await client.getMailboxLock('INBOX');
       try {
         const totalEmails = client.mailbox.exists;
-        const startSeq = Math.max(1, totalEmails - 50 + 1);
+        const startSeq = Math.max(1, totalEmails - 150 + 1);
   
         const messages = client.fetch(`${startSeq}:${totalEmails}`, { envelope: true, uid: true, source: true });
         const emailDataList = [];
@@ -119,6 +119,26 @@ router.get('/search-emails', async (req, res) => {
         for await (let message of messages) {
           const { simpleParser } = await import('mailparser');
           const parsed = await simpleParser(message.source);
+  
+          // Log the parsed text body for debugging purposes
+          console.log("Email Body Text:", parsed.text);
+  
+          // Refined regex pattern to handle potential line breaks and whitespaces
+          const infoPattern = /Navn:\s*(.*?)\s*\nEpostadresse:\s*(.*?)\s*\nTelefonnummer:\s*(.*?)\s*\n.*?Startdato:\s*(.*?)\s*\nSluttdato:\s*(.*?)\s*\n/;
+  
+          const match = infoPattern.exec(parsed.text || '');
+  
+          // If match is found, extract the details
+          let extractedInfo = {};
+          if (match) {
+            extractedInfo = {
+              Navn: match[1],
+              Epostadresse: match[2],
+              Telefonnummer: match[3],
+              Startdato: match[4],
+              Sluttdato: match[5],
+            };
+          }
   
           if (parsed.subject && parsed.subject.toLowerCase().includes(searchTerm.toLowerCase())) {
             const emailData = {
@@ -129,8 +149,7 @@ router.get('/search-emails', async (req, res) => {
               to: parsed.to ? parsed.to.value : [],
               cc: parsed.cc ? parsed.cc.value : [],
               bcc: parsed.bcc ? parsed.bcc.value : [],
-              text: parsed.text,
-              html: parsed.html,
+              extractedInfo, // Include the extracted info here
             };
             emailDataList.push(emailData);
           }
@@ -152,6 +171,7 @@ router.get('/search-emails', async (req, res) => {
       await client.logout();
     }
   });
+  
   
   
   
