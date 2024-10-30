@@ -1,5 +1,3 @@
-// server.js
-
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -7,6 +5,7 @@ import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
+import emailRouter from './routes/email.js';
 
 const app = express();
 const port = process.env.PORT || 3004;
@@ -18,14 +17,27 @@ app.use(express.static(path.join(process.cwd(), 'public')));
 app.use(cookieParser());
 app.use(morgan('dev'));
 
+
+app.use('/emr', emailRouter);
+
+
+
+// Serve index.html from public folder
+app.get('/', (req, res) => {
+  res.sendFile(path.join(process.cwd(), 'public', 'index.html'));
+});
 // View Engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(process.cwd(), 'views'));
 
 // Routes
-app.get('/', (req, res) => {
-  res.render('index', { title: 'InariBox.io' });
-});
+
+// app.get('/', (req, res) => {
+//   res.render('index', { title: 'InariBox.io' });
+// });
+
+
+
 
 // Start the Server
 app.listen(port, () => {
