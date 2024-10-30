@@ -5,7 +5,7 @@ import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
-import emailRouter from './routes/email.js';
+import emailRouter from './src/routes/email.js';
 
 const app = express();
 const port = process.env.PORT || 3004;
