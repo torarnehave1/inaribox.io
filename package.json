@@ -18,6 +18,8 @@
     "express": "^4.21.1",
     "imapflow": "^1.0.164",
     "mailparser": "^3.7.1",
+    "mongodb": "^6.10.0",
+    "mongoose": "^8.7.3",
     "morgan": "^1.10.0"
   }
 }

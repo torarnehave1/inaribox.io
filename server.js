@@ -21,7 +21,10 @@ app.use(morgan('dev'));
 app.use('/emr', emailRouter);
 
 
-
+import { connect } from 'mongoose';
+connect(process.env.MONGO_DB_URL)
+  .then(() => console.log('Connected to MongoDB with Mongoose'))
+  .catch(err => console.error('Could not connect to MongoDB', err));
 // Serve index.html from public folder
 app.get('/', (req, res) => {
   res.sendFile(path.join(process.cwd(), 'public', 'index.html'));
