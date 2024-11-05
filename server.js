@@ -6,7 +6,7 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import emailRouter from './src/routes/email.js';
-import userRoutes from './src/routes/user.js';
+import userRoutes from './src/routes/user_routes.js';
 
 
 const app = express();
