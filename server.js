@@ -6,6 +6,8 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import emailRouter from './src/routes/email.js';
+import userRoutes from './src/routes/user.js';
+
 
 const app = express();
 const port =  3004;
@@ -19,6 +21,7 @@ app.use(morgan('dev'));
 
 
 app.use('/emr', emailRouter);
+app.use('/a', userRoutes);
 
 
 import { connect } from 'mongoose';
