@@ -8,7 +8,7 @@ import morgan from 'morgan';
 import emailRouter from './src/routes/email.js';
 
 const app = express();
-const port = process.env.PORT || 3004;
+const port =  3004;
 
 // Middleware
 app.use(express.json());
