@@ -17,6 +17,7 @@ server {
 
     # Main location serving static files
     location / {
+        root /var/www/html/inaribox.io/public;
         try_files $uri $uri/ =404;
     }
 
