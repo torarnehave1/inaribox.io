@@ -446,6 +446,7 @@ router.get("/verify-email", async (req, res) => {
 
 //user route prefix = 
 router.post('/login', async (req, res) => {
+    console.log("Received login request:", req.body);
     const { username, password } = req.body;
 
     try {
