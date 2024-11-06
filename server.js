@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import emailRouter from './src/routes/email.js';
 import userRoutes from './src/routes/user_routes.js';
+import configRoutes from './src/routes/config_routes.js';
 
 
 const app = express();
@@ -22,6 +23,7 @@ app.use(morgan('dev'));
 
 app.use('/emr', emailRouter);
 app.use('/a', userRoutes);
+app.use('/cnf', configRoutes);
 
 
 import { connect } from 'mongoose';
@@ -47,5 +49,9 @@ app.set('views', path.join(process.cwd(), 'views'));
 
 // Start the Server
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  if (process.env.NODE_ENV === 'production') {
+    console.log(`Server running at ${process.env.SYSTEM_PRODUCTION_URL}`);
+  } else {
+    console.log(`Server running at http://localhost:${port}`);
+  }
 });
