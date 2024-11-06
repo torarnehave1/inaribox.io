@@ -45,4 +45,5 @@ export default {
   accessToken: process.env.DROPBOX_ACCESS_TOKEN,
   refreshToken: process.env.DROPBOX_REFRESH_TOKEN,
   expiryTime: 0,
+  applicationLogo: process.env.APPLICATION_LOGO,
 };
