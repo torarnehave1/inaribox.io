@@ -445,7 +445,7 @@ router.get("/verify-email", async (req, res) => {
 });
 
 //user route prefix = 
-router.post('/login', async (req, res) => {
+router.post('/login-orginal', async (req, res) => {
     console.log("Received login request:", req.body);
     const { username, password } = req.body;
 
@@ -471,6 +471,53 @@ router.post('/login', async (req, res) => {
 
         if (!isMatch) {
             //console.log('Password does not match');
+            return res.status(400).send('Invalid username or password.');
+        }
+
+        const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
+       
+        // Set the token as a cookie with SameSite attribute
+        res.cookie('jwtToken', token, {
+            httpOnly: false,
+            sameSite: 'Strict', // or 'Lax' or 'Strict', based on your needs
+            secure: false // make sure to use HTTPS
+        });
+
+        // Send a redirect response
+        res.status(200).json({ message: 'Login successful', redirectUrl: '/index.html' });
+    } catch (err) {
+        //console.error(err);
+        res.status(500).send('Server error.');
+    }
+});
+
+
+router.post('/login', async (req, res) => {
+    console.log("Received login request:", req.body);
+    const { username, password } = req.body;
+
+    try {
+        const user = await User.findOne({ username });
+
+        if (!user) {
+            console.log('User not found');
+            return res.status(400).send('Invalid username or password.');
+        }
+
+        //console.log('User found:', user);
+
+        // Check if the user's email has been verified
+        if (!user.isVerified) {
+            console.log('User email not verified');
+            return res.status(400).send('Please verify your email before logging in.');
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        
+
+        if (!isMatch) {
+            console.log('Password does not match');
             return res.status(400).send('Invalid username or password.');
         }
 
