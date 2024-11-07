@@ -1,0 +1,31 @@
+name: Update Documentation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'  # Specify the path to your documentation folder
+
+jobs:
+  update-knowledge:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out the repository
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        # Install any dependencies you need for embedding, like Python, Node, etc.
+        # Example for Python dependencies:
+        pip install openai some-vector-database-sdk
+
+    - name: Update Assistant Documentation
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      run: |
+        # Run your documentation update script
+        # For example, a Python script that processes updated files and uploads embeddings
+        python scripts/update_embeddings.py
