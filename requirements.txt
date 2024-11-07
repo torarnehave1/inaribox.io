@@ -1,3 +1,3 @@
-openai==0.27.0  # for OpenAI API access
-pymongo==4.3.3  # for MongoDB connections
-numpy==1.21.2  # for numerical computations
+openai  # for OpenAI API access
+pymongo  # for MongoDB connections
+numpy  # for numerical computations
