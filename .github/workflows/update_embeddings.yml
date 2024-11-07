@@ -1,6 +1,14 @@
+name: Update Embeddings
+
+on:
+  push:
+    branches:
+      - main
+
 jobs:
   update_embeddings:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
