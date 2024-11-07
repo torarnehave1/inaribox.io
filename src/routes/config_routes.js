@@ -1,12 +1,11 @@
-// config_routes.js
-import dotenv from 'dotenv';
-dotenv.config(); // Optional if already called in main server file
-
+// src/routes/config_routes.js
 import express from 'express';
+import config from '../config/config.js'; // Import the default export
+
 const router = express.Router();
 
-router.get('/config', (req, res) => {
-  res.json({ APPLICATION_LOGO: process.env.APPLICATION_LOGO });
+router.get('/application-logo', (req, res) => {
+  res.json({ applicationLogo: config.applicationLogo });
 });
 
 export default router;
