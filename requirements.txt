@@ -2,3 +2,4 @@ openai  # for OpenAI API access
 pymongo  # for MongoDB connections
 numpy  # for numerical computations
 python-dotenv  # to load .env files
+pandas  # for data manipulation
