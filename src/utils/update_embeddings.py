@@ -8,8 +8,7 @@ import numpy as np
 # Load environment variables
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-MONGO_URL = 'mongodb+srv://torarnehave:Q3AYMtCA62tOWNk1@cluster0.wcbzj0t.mongodb.net/slowyounet'
-
+MONGO_URL = os.getenv("MONGO_URL")
 # Initialize OpenAI API client
 client = OpenAI(api_key=OPENAI_API_KEY)
 
