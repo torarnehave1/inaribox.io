@@ -7,13 +7,13 @@ import numpy as np
 # Load environment variables
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-MONGO_URI = os.getenv("MONGO_URI")
+MONGO_URL = os.getenv("MONGO_URL")
 
 # Initialize OpenAI API
 client = openai.OpenAI(api_key=OPENAI_API_KEY)
 
 # Connect to MongoDB
-client_mongo = MongoClient(MONGO_URI)
+client_mongo = MongoClient(MONGO_URL)
 db = client_mongo['slowyounet']
 collection = db['embeddings']
 
