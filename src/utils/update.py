@@ -1,5 +1,5 @@
 import os
-from openai import OpenAI
+import openai
 from pymongo import MongoClient
 from dotenv import load_dotenv
 import pandas as pd
@@ -9,8 +9,9 @@ import numpy as np
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 MONGO_URL = os.getenv("MONGO_URL")
-# Initialize OpenAI API client
-client = OpenAI(api_key=OPENAI_API_KEY)
+
+# Initialize OpenAI API key
+openai.api_key = OPENAI_API_KEY
 
 # Connect to MongoDB
 print("MONGO_URL:", MONGO_URL)  # Debug line to verify MONGO_URL value
@@ -18,11 +19,11 @@ client_mongo = MongoClient(MONGO_URL)
 db = client_mongo['slowyounet']
 collection = db['embeddings']
 
-# Define function to get embeddings using the specified OpenAI client
+# Define function to get embeddings using OpenAI API
 def get_embedding(text, model="text-embedding-3-small"):
     text = text.replace("\n", " ")  # Preprocess text to remove newlines
-    response = client.embeddings.create(input=[text], model=model)
-    return response.data[0].embedding
+    response = openai.Embedding.create(input=[text], model=model)
+    return response['data'][0]['embedding']
 
 # Function to update or insert embeddings in MongoDB
 def update_embedding(document_id, text):
@@ -39,7 +40,8 @@ def update_embedding(document_id, text):
 
 # Function to process the index.html file and insert into MongoDB
 def process_html_file():
-    file_path = "public/index.html"  # Relative path for GitHub Actions
+    file_path = os.path.join(os.path.dirname(__file__), '..', '..', 'public', 'index.html')
+    print("Full path to index.html:", os.path.abspath(file_path))
     
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -59,11 +61,16 @@ def export_embeddings_to_csv():
         print("No embeddings found in MongoDB.")
         return
     
+    # Ensure output directory exists
+    output_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'output')
+    os.makedirs(output_dir, exist_ok=True)
+    
     # Create DataFrame with embeddings
     df = pd.DataFrame(docs)
     df['embedding'] = df['embedding'].apply(lambda x: np.array(x))  # Convert to numpy arrays if needed
-    df.to_csv('output/embedded_docs.csv', index=False)
-    print("Embeddings exported to 'output/embedded_docs.csv'")
+    output_file = os.path.join(output_dir, 'embedded_docs.csv')
+    df.to_csv(output_file, index=False)
+    print(f"Embeddings exported to '{output_file}'")
 
 # Example usage
 if __name__ == "__main__":
